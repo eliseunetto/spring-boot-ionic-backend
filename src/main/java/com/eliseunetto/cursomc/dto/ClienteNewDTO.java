@@ -2,6 +2,9 @@ package com.eliseunetto.cursomc.dto;
 
 import java.io.Serializable;
 
+import com.eliseunetto.cursomc.services.validation.ClienteInsert;
+
+@ClienteInsert
 public class ClienteNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
