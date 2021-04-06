@@ -83,9 +83,127 @@ Recuperar os dados e disponibilizá-los por meio de uma API Rest BÁSICA com os 
   - Criar StandardError
   - Criar ResourceExceptionHandler
 
+<br />
+
 ## Operações de CRUD e Casos de Uso
 
-- Todo
+### Objetivo geral:
+
+Implementar operações de CRUD e de casos de uso conforme boas práticas de Engenharia de Software.
+
+- Competências:
+
+  - Implementar requisições _POST_, _GET_, _PUT_ e _DELETE_ para inserir, obter, atualizar e deletar
+    entidades, respectivamente, seguindo boas práticas _REST_ e de desenvolvimento em camadas.
+  - Trabalhar com DTO (Data Transfer Object)
+  - Trabalhar com paginação de dados
+  - Trabalhar com validação de dados com Bean Validation (javax.validation)
+  - Criar validações customizadas
+  - Fazer tratamento adequado de exceções (incluindo integridade referencial e validação)
+  - Efetuar consultas personalizadas ao banco de dados
+
+<br />
+
+### Apresentando o Caso de Uso
+
+|                   | Registrar Pedido                                                                                          |
+| ----------------- | :-------------------------------------------------------------------------------------------------------- |
+| **Atores**        | Cliente                                                                                                   |
+| **Interessados**  | Departamento de vendas                                                                                    |
+| **Precondições**  | Cliente cadastrado                                                                                        |
+| **Pós-condições** | -                                                                                                         |
+| **Visão geral**   | Este caso de uso consiste no processo de escolha de produtos e fechamento de pedido por parte do cliente. |
+
+<br />
+
+|              | Cenário Principal de SUCESSO                                                                                       |
+| ------------ | :----------------------------------------------------------------------------------------------------------------- |
+| **1.[OUT]**  | O **sistema** informa os nomes de todas categorias ordenadamente.                                                  |
+| **2.[IN]**   | O **cliente** informa um trecho de nome de produto desejado, e seleciona as categorias desejadas.                  |
+| **3.[OUT]**  | O **sistema** informa nome e preço dos produtos que se enquadram na pesquisa.                                      |
+| **4.[IN]**   | O **cliente** seleciona um produto para adicionar ao carrinho de compras (\*).                                     |
+| **5.[OUT]**  | O **sistema** exibe o carrinho de compras (\*\*).                                                                  |
+| **6.[IN]**   | O **cliente** informa que deseja fechar o pedido, e informa seu usuário e senha.                                   |
+| **7.[OUT]**  | O **sistema** informa logradouro, numero, complemento, bairro, cep, cidade e estado de todos endereços do cliente. |
+| **8.[IN]**   | O **cliente** seleciona um endereço para entrega.                                                                  |
+| **9.[OUT]**  | O **sistema** exibe as formas de pagamento.                                                                        |
+| **10.**      | O **cliente** escolhe uma das opções:                                                                              |
+|              | **10.1** Variante: Pagamento com boleto                                                                            |
+|              | **10.1** Variante: Pagamento com cartão                                                                            |
+| **11.[OUT]** | O **sistema** informa a confirmação do pedido (\*\*\*).                                                            |
+
+<br />
+
+|                   | Cenários Alternativos: VARIANTES:                                                          |
+| ----------------- | :----------------------------------------------------------------------------------------- |
+| **Variante 5.1**  | **Nova busca**                                                                             |
+|                   | **5.1.1[IN]** O **cliente** informa que deseja realizar uma nova busca.                    |
+|                   | **5.1.2** Vai para 1.                                                                      |
+|                   |                                                                                            |
+| **Variante 10.1** | **Pagamento com boleto**                                                                   |
+|                   | **10.1.1[IN]** O **cliente** informa que deseja pagar com boleto.                          |
+|                   |                                                                                            |
+| **Variante 10.2** | **Pagamento com cartão**                                                                   |
+|                   | **10.2.1[IN]** O **cliente** informa que deseja pagar com cartão e informa a quantidade de |
+| parcelas.         |
+
+<br />
+
+|                  | Cenários Alternativos: EXCEÇÕES:                                        |
+| ---------------- | :---------------------------------------------------------------------- |
+| **Variante 6.1** | **Falha na autenticação**                                               |
+|                  | **6.1.1** O **sistema** informa mensagem de usuário ou senha inválidos. |
+|                  | **6.1.2** Vai para 6.                                                   |
+
+<br />
+
+| Informações complementares                                                                                                                                                                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (\*) Quando um produto já existente no carrinho é selecionado, a quantidade deste produto no carrinho deve ser incrementada, caso contrário o produto é adicionado ao carrinho com quantidade 1.                                                                                                     |
+| (\*\*) As informações do carrinho de compras são: nome, quantidade e preço unitário de cada produto (não será dado desconto), o subtotal de cada item do carrinho, e o valor total do carrinho.                                                                                                      |
+| (\*\*\*) As informações da confirmação do pedido são: número, data e horário do pedido, valor total do pedido, bem como o tipo e estado do pagamento (Pendente). Caso o pagamento seja com boleto, informar a data de vencimento, e caso o pagamento seja com cartão, informar o número de parcelas. |
+
+<br />
+
+**Validações de dados**
+
+- **Sem acesso a dados**
+
+  - **Sintáticas**:
+    - Campo não pode ser vazio
+    - Valor numérico mínimo e máximo
+    - Comprimento de string mínimo e máximo
+    - somente dígitos
+      Padrão (expressão regular): (##)-####-####
+  - **Outras**:
+    - Data futura / passada
+  - **Mais de um campo**
+    - Confirmação de senha igual à senha
+
+- **Com acesso a dados**
+
+  - Email não pode ser repetido
+  - Cada cliente pode cadastrar no máximo três cupons por mês
+
+- **Entidade Categoria:**
+  - Validações sintáticas
+    - Nome não pode ser vazio
+    - Nome deve conter entre 5 e 80 caracteres
+
+<br />
+
+**Instâncias do Modelo Conceitual:**
+![Diagrama2 - Instâncias](img-readme/diagrama2-instancias.png)
+
+### Basic tips:
+
+- Checklist para criar **validação customizada**:
+  - Criar a anotação customizada
+  - Criar o Valitator personalizado para esta anotação e para o nosso DTO
+  - Programar o Validator, fazendo testes e inserindo as mensagens de erro
+  - Anotar nosso DTO com a nova anotação criada
+
+<br />
 
 ## Banco de dados MySQL e Implantação no Heroku
 
