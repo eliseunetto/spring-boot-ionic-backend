@@ -207,7 +207,63 @@ Implementar operações de CRUD e de casos de uso conforme boas práticas de Eng
 
 ## Banco de dados MySQL e Implantação no Heroku
 
-- Todo
+### Objetivo geral:
+
+- Incluir banco de dados relacional MySQL ao projeto para ser utilizado tanto em desenvolvimento quanto em produção.
+- Definir profiles de projeto (teste, desenvolvimento, produção).
+- Implantar o backend no Heroku
+
+### Tópicos e dicas:
+
+- Instalação do MySQL
+  - Sugestão: Xampp
+- Criando profile de **teste**
+  - application-test.properties
+  - application.properties
+    - spring.profiles.active=**test**
+- Criando profile de **desenvolvimento**
+  - application-dev.properties
+  - application.properties
+    - spring.profiles.active=**dev**
+- Instalando/preparando o **Heroku**
+  - Cadastrando-se no Heroku
+    - Acesse heroku.com e faça o procedimento
+      - Sign up
+      - Preencha os dados e envie o formulário
+      - Abra seu email e clique no link de confirmação
+      - Defina uma senha
+- Criando um novo app
+  - Create New App
+  - Nome (opcional)
+  - Escolha a localidade
+- Instalação do MySQL no Heroku
+  - Aba Overview -> Configure Add-ons
+  - Procure "MySQL" na caixa de pesquisa e escolha o ClearDB MySQL
+  - Escolha o plano e clique em Provide
+    - Cadastrar um cartão de crédito (https://dashboard.heroku.com/account/billing)
+    - Documentação do ClearDB: https://devcenter.heroku.com/articles/cleardb
+- Instalação do Heroku CLI
+  - https://devcenter.heroku.com/articles/heroku-cli#download-and-install
+  - Escolha a versão para seu sistema faça o procedimento de instalação
+  - Abra o terminal (no Windows o cmd) e faça login:
+    - heroku login
+
+### Dump da base de dados para o Heroku
+
+- 1 - Gere um backup da base de dados local
+- 2 - Associe o repositório local com o Heroku
+- 3 - Execute o SQL gerado no servidor do Heroku
+  - 3.1 - Obtenha a URL do banco de dados
+  - 3.2 - Com base nos dados da URL de conexão, monte o comando para executar o arquivo SQL no servidor
+
+### Configuração e envio do projeto para produção
+
+- 1 - Obtenha a URL do banco de dados
+- 2 - Crie o arquivo application-prod.properties
+- 3 - Crie o arquivo Procfile
+- 4 - Envie o projeto para o Heroku
+
+<br />
 
 ## Serviço de email
 
