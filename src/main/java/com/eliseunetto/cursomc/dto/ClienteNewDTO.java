@@ -12,6 +12,7 @@ public class ClienteNewDTO implements Serializable {
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
+	private String senha;
 
 	private String logadouro;
 	private String numero;
@@ -58,6 +59,14 @@ public class ClienteNewDTO implements Serializable {
 
 	public void setTipo(Integer tipo) {
 		this.tipo = tipo;
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+	
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public String getLogadouro() {
