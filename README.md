@@ -267,7 +267,84 @@ Implementar operações de CRUD e de casos de uso conforme boas práticas de Eng
 
 ## Serviço de email
 
-- Todo
+### Objetivo geral:
+
+- Criar um serviço de email
+  - Criar uma operação de envio de confirmação de pedido
+- Implementar o serviço em modo de desenvolvimento e produção
+  - Criar o MockEmailService com Logger
+  - Criar o SmtpEmailService com SMTP do Google
+- Demonstrar uma implementação flexível e elegante com padrões de projeto (Strategy e Template
+  Method)
+
+### Tópicos e dicas:
+
+- Implementando toString de Pedido
+  - Checklist:
+    - Mudar o profile do projeto para test
+    - Implementar toString para ItemPedido e Pedido
+    - Ajustes na operação de insert em PedidoService:
+      - Instanciar os objetos relacionados (Cliente e Produto) a partir do banco de dados
+      - Instanciar a data do pedido com base na data do sistema
+- MockEmailService com Logger. Padrões Strategy e Template
+  Method
+- Checklist:
+  - Adicionar a dependência no POM.XML
+  - Remetente e destinatário default no application.properties
+  - Criar a interface EmailService (padrão Strategy)
+  - Criar a classe abstrata AbstractEmailService
+    - Criar método prepareSimpleMailMessageFromPedido
+    - Sobrescrever o método sendOrderConfirmationEmail (padrão Template Method)
+  - Implementar o MockEmailService
+  - Em TestConfig, criar um método @Bean EmailService que retorna uma instância de MockEmailService
+- Implementando SmtpEmailService com servidor do Google
+- Checklist:
+
+  1. Acrescentar os seguintes dados em application-dev.properties:
+     > spring.mail.host=smtp.gmail.com \
+     > spring.mail.username= \
+     > spring.mail.password= \
+     > spring.mail.properties.mail.smtp.auth = true \
+     > spring.mail.properties.mail.smtp.socketFactory.port = 465 \
+     > spring.mail.properties.mail.smtp.socketFactory.class = javax.net.ssl.SSLSocketFactory \
+     > spring.mail.properties.mail.smtp.socketFactory.fallback = false \
+     > spring.mail.properties.mail.smtp.starttls.enable = true \
+     > spring.mail.properties.mail.smtp.ssl.enable = true
+  2. Mudar o profile do projeto para dev
+  3. ATENÇÃO: em DBService mude o email do cliente para algum email seu
+  4. Implementar o SmtpEmailService utilizando nele uma instância de MailSender
+  5. Em DevConfig, criar um método @Bean EmailService que retorna uma instância de SmtpEmailService
+
+- **Notas**:
+
+  1. Para testar não se esqueça de subir o _MySQL_
+  2. Na primeira tentativa de envio de email você vai receber um erro porque o _Google_ por padrão bloqueia tentativa
+     de email por app - Verifique seu email do _Google_: - Clique em "permitindo o acesso a apps menos seguros" e habilite o envio de emails.
+
+- Referência: https://stackoverflow.com/questions/25341198/javax-mail-authenticationfailedexception-is-thrown-while-sending-email-in-java/33801654
+- Link para liberar acesso ao Gmail:
+
+  - Libere o acesso ao app por meio de dois links:
+    https://www.google.com/settings/security/lesssecureapps \
+    https://accounts.google.com/b/0/DisplayUnlockCaptcha
+
+- Email HTML
+  - Checklist:
+    1. Incluir no pom.xml a dependência do Thymeleaf
+    2. Criar o template Thymeleaf para o email. Criar o arquivo em:
+       - resources/templates/email/confirmacaoPedido.html
+    3. Em EmailService, incluir os seguintes métodos:
+       - void sendOrderConfirmationHtmlEmail(Pedido obj)
+       - void sendHtmlEmail(MimeMessage msg)
+    4. Em AbstractEmailService, incluir o seguinte método, que será responsável por retornar o HTML preenchido com os dados de um pedido, a partir do template Thymeleaf:
+       - protected String htmlFromTemplatePedido(Pedido obj)
+    5. Em AbstractEmailService, implementar o novo contrato:
+       - void sendOrderConfirmationHtmlEmail(Pedido obj)
+    6. Em MockEmailService, implementar os novos contratos de EmailService
+    7. Em SmtpEmailService, implementar os novos contratos de EmailService
+    8. Em PedidoService, mudar a chamada para o método sendOrderConfirmationHtmlEmail
+
+<br />
 
 ## Autenticação e autorização com tokens JWT
 
