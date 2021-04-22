@@ -635,7 +635,7 @@ Checklist:
 Checklist:
 
 - Em Cliente, remover o atributo imageUrl
-- Em application.properties, incluir: **img.prefix.client.profile=cp**
+- Em application.properties, incluir: `img.prefix.client.profile=cp`
 - Crie um serviço ImageService com uma função para obter uma imagem JPG a partir do arquivo
   > public BufferedImage getJpgImageFromFile(MultipartFile uploadedFile)
 - Em ClienteService, fazer as devidas alterações
@@ -644,7 +644,7 @@ Checklist:
 
 Checklist:
 
-- Em application.properties, incluir: **img.profile.size=200**
+- Em application.properties, incluir: `img.profile.size=200`
 - Incluir a dependência:
 
 ```
@@ -665,20 +665,156 @@ Checklist:
 
 ## Ajustes finais no backend e bucket
 
-- Todo
+### Objetivo geral:
 
-## Aplicação Ionic - Parte 1/2
+- Incluir detalhes finais no backend e bucket para possibilitar a construção e teste da aplicação
 
-- Todo
+### Expondo o header Authorization (problema de Cors)
 
-## Aplicação Ionic - Parte 2/2
+Cors (Cross-origin resource sharing): quais recursos (ex: quais métodos HTTP? quais headers?) estarão
+disponíveis para requisições advindas de origens diferentes?
 
-- Todo
+Sugestão: use configurações padrão. À medida em que novas necessidades forem surgindo, inclua a solução.
 
-## Finalização, build e publicação na Play Store
+Referências:
 
-- Todo
+- https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+- https://upload.wikimedia.org/wikipedia/commons/c/ca/Flowchart_showing_Simple_and_Preflight_XHR.svg
+- https://stackoverflow.com/questions/1256593/why-am-i-getting-an-options-request-instead-of-a-get-request
+- https://stackoverflow.com/questions/47687774/how-to-access-headers-from-a-httpclient-response-angular-ionic
+- https://www.html5rocks.com/en/tutorials/cors/
 
-## Ajustes no app Ionic
+**Checklist**: \
+Acrescentar no objeto de resposta: `response.addHeader("access-control-expose-headers", "Authorization");`
 
-- Todo
+- Em JWTAuthenticationFilter, em successfulAuthentication
+- Em AuthResource, no endpoint de refresh_token
+
+### Configuração de Cors no bucket
+
+```
+[
+    {
+        "AllowedHeaders": [
+            "Authorization"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "http://*"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    },
+    {
+        "AllowedHeaders": [
+            "Authorization"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "https://*"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    }
+]
+```
+
+### Endpoint para buscar cliente por email
+
+Checklist:
+
+- Atualizar ClienteService
+- Atualizar ClienteResource
+
+### Endpoints para buscar estados e cidades
+
+Checklist:
+
+- Criar EstadoDTO
+- Em EstadoRepository, acrescentar método `findAllByOrderByNome`
+- Criar EstadoService
+- Criar endpoint para obter estados (classe EstadoResource)
+- Criar CidadeDTO
+- Em CidadeRepository, acrescentar método findCidades
+- Criar CidadeService
+- Criar endpoint para obter cidades (sugestão: criar `/estados/{estado_id}/cidades`)
+- Em SecurityConfig, liberar acesso público aos endpoints
+
+### Padronizando formato das exceções
+
+Campos:
+
+```
+"timestamp": 1467943353634,
+"status": 415,
+"error": "Unsupported Media Type",
+"message": "Content type 'application/xml' not supported",
+"path": "/some-resource"
+```
+
+Checklist:
+
+- ATENÇÃO: trocar código de erro de validação para 422 (IMPORTANTE)
+- Atualizar StandardError
+- Atualizar ValidationError
+- Atualizar ResourceExceptionHandler
+
+### Acrescentando mais produtos para testar infinity scroll
+
+1. Declarar os novos produtos e associá-los com a categoria cat1:
+   Exemplo:
+
+```
+Produto p12 = new Produto(null, "Produto 12", 10.00);
+Produto p13 = new Produto(null, "Produto 13", 10.00);
+Produto p14 = new Produto(null, "Produto 14", 10.00);
+...
+
+cat1.getProdutos().addAll(Arrays.asList(p12, p13, p14,...);
+
+p12.getCategorias().add(cat1);
+p13.getCategorias().add(cat1);
+p14.getCategorias().add(cat1);
+...
+```
+
+2. Inserir os produtos:
+
+```
+produtoRepository.save(Arrays.asList(p12, p13, p14,...);
+```
+
+### Liberando CORS para PUT e DELETE
+
+Referências:
+
+- https://spring.io/blog/2015/06/08/cors-support-in-spring-framework
+- https://docs.spring.io/spring-security/site/docs/current/reference/html/cors.html
+- https://spring.io/understanding/CORS
+
+### Expondo o header location nas respostas
+
+Referências:
+
+- https://stackoverflow.com/questions/19825946/how-to-add-a-filter-class-in-spring-boot
+- https://gist.github.com/rgiaviti/80d50041541475d5ad7a752b53aa4eed
+
+Aumentando o tamanho máximo permitido para upload
+
+Referências:
+
+- https://stackoverflow.com/questions/37540028/how-to-set-the-max-size-of-upload-file
+
+Checklist:
+
+- Em application.properties, fazer:
+  - `spring.servlet.multipart.max-file-size=10MB`
+  - `spring.servlet.multipart.max-request-size=10MB`
+
+&#128070; [Voltar ao Sumário](#Sumário)
+
+<br />
