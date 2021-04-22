@@ -9,10 +9,6 @@
 - [Autenticação e autorização com tokens JWT](#Autenticação-e-autorização-com-tokens-JWT)
 - [Armazenamento de imagens usando Amazon S3](#Armazenamento-de-imagens-usando-Amazon-S3)
 - [Ajustes finais no backend e bucket](#Ajustes-finais-no-backend-e-bucket)
-- [Aplicação Ionic - Parte 1/2](#Aplicação-Ionic-Parte-1/2)
-- [Aplicação Ionic - Parte 2/2](#Aplicação-Ionic-Parte-2/2)
-- [Finalização, build e publicação na Play Store](#Finalização-build-e-publicação-na-Play-Store)
-- [Ajustes no app Ionic](#Ajustes-no-app-Ionic)
 
 ## Implementação do Modelo Conceitual
 
